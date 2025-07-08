@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Logsewa Record Keeping Mock Test</title>
+    <title>Record Keeping and Safety Practices Quiz</title>
     <style>
         * {
             margin: 0;
@@ -300,10 +300,10 @@
 </head>
 <body>
     <div class="quiz-container">
-        <h1>Logsewa Record Keeping Mock Test</h1>
+        <h1>Record Keeping and Safety Practices Quiz</h1>
         <div class="quiz-header">
             <div class="timer" id="timer">Time: 00:00</div>
-            <div class="score" id="current-score">Score: 0/35</div>
+            <div class="score" id="current-score">Score: 0/80</div>
         </div>
         <div class="progress-bar">
             <div class="progress" id="progress"></div>
@@ -335,6 +335,7 @@
 
     <script>
         const questions = [
+            // 7.1 Importance of record keeping
             {
                 q: "What is the importance of record keeping in a workshop?",
                 options: ["To analyze equipment performance and costs", "To decorate the office", "To track employee salaries", "To monitor office supplies"],
@@ -342,17 +343,37 @@
                 explanation: "Record keeping tracks equipment performance, maintenance costs, and operational efficiency, aiding decision-making."
             },
             {
-                q: "Which is NOT a safety tool for a mechanic?",
-                options: ["Shirt and pants", "Safety boots", "Goggles", "Gloves"],
+                q: "Which document is used to track daily usage and issues of a vehicle?",
+                options: ["Logbook", "Bill book", "Service manual", "Warranty card"],
                 answer: 0,
-                explanation: "Shirt and pants are not safety tools; safety boots, goggles, and gloves protect against workplace hazards."
+                explanation: "A logbook records daily vehicle usage, mileage, and issues for operational tracking."
             },
             {
-                q: "Personal safety device मा पर्ने कुन हो? (Which is a personal safety device?)",
-                options: ["Safety helmet", "Fan belt cover", "Wrench", "Screwdriver"],
+                q: "Record keeping helps in:",
+                options: ["Tracking maintenance costs and schedules", "Only employee attendance", "Monitoring fuel prices", "Managing office furniture"],
                 answer: 0,
-                explanation: "सुरक्षा हेलमेट व्यक्तिगत सुरक्षा उपकरण हो; फ्यान बेल्ट कभर गाडीको कम्पोनेन्ट हो। (A safety helmet is a personal safety device; a fan belt cover is a vehicle component.)"
+                explanation: "Record keeping tracks maintenance costs, schedules, and equipment performance, not just attendance."
             },
+            {
+                q: "Machine को मर्मत, सञ्चालन, समायोजन आदि जान्न दिइने सूचना कुन म्यानुअलमा पाइन्छ? (Which manual provides information on machine maintenance, operation, and adjustment?)",
+                options: ["Workshop Manual", "Parts Manual", "Sales Brochure", "Warranty Card"],
+                answer: 0,
+                explanation: "वर्कशप म्यानुअलले मर्मत र सञ्चालनको विस्तृत जानकारी दिन्छ। (A workshop manual provides detailed maintenance and operation instructions.)"
+            },
+            {
+                q: "मेसिनको सञ्चालन र मर्मत गर्न कुन म्यानुअल चाहिन्छ? (Which manual is needed for machine operation and maintenance?)",
+                options: ["Workshop Manual", "Instruction Chart", "Parts Catalog", "User Guide"],
+                answer: 0,
+                explanation: "वर्कशप म्यानुअल मेसिनको सञ्चालन र मर्मतको लागि आवश्यक छ। (A workshop manual is essential for machine operation and maintenance.)"
+            },
+            {
+                q: "मेसिनको operation manual ले कुन प्रकारको जानकारी दिन्छ? (What type of information does an operation manual provide?)",
+                options: ["प्रयोग र मर्मतको तरिका (Usage and maintenance methods)", "केवल प्रयोगको तरिका (Only usage methods)", "केवल पार्ट्सको जानकारी (Only parts information)", "केवल लागतको जानकारी (Only cost information)"],
+                answer: 0,
+                explanation: "अपरेसन म्यानुअलले प्रयोग र मर्मतको प्रक्रिया समेट्छ। (An operation manual covers both usage and maintenance procedures.)"
+            },
+
+            // 7.2 Basic knowledge of maintenance Job Card
             {
                 q: "Who uses a vehicle maintenance job card to record maintenance?",
                 options: ["Mechanic only", "Mechanic and supervisor", "Driver only", "Office clerk"],
@@ -366,12 +387,6 @@
                 explanation: "A job card includes the job description, parts used, labor hours, and other maintenance details."
             },
             {
-                q: "Which document is used to track daily usage and issues of a vehicle?",
-                options: ["Logbook", "Bill book", "Service manual", "Warranty card"],
-                answer: 0,
-                explanation: "A logbook records daily vehicle usage, mileage, and issues for operational tracking."
-            },
-            {
                 q: "Who is responsible for signing the maintenance job card?",
                 options: ["Mechanic and supervisor", "Driver only", "Customer only", "Accountant"],
                 answer: 0,
@@ -383,11 +398,217 @@
                 answer: 0,
                 explanation: "A job card is the standard format for documenting vehicle defects and repairs."
             },
+
+            // 7.3 Record keeping of replaced parts
             {
-                q: "Record keeping helps in:",
-                options: ["Tracking maintenance costs and schedules", "Only employee attendance", "Monitoring fuel prices", "Managing office furniture"],
+                q: "What is the purpose of recording replaced parts in a workshop?",
+                options: ["To decorate the workshop", "To track inventory and maintenance history", "To monitor employee hours", "To calculate fuel usage"],
+                answer: 1,
+                explanation: "Recording replaced parts helps track inventory, ensure proper maintenance, and maintain a history for future reference."
+            },
+            {
+                q: "Which document is primarily used to record replaced parts during a repair?",
+                options: ["Logbook", "Job card", "Service manual", "Warranty card"],
+                answer: 1,
+                explanation: "The job card is the primary document for recording replaced parts, labor, and repair details."
+            },
+            {
+                q: "How should replaced parts be documented for warranty claims?",
+                options: ["Verbally reported to the supervisor", "Recorded with part numbers and dates", "Kept in a personal notebook", "Discarded after use"],
+                answer: 1,
+                explanation: "Recording part numbers and dates ensures accurate documentation for warranty claims and audits."
+            },
+            {
+                q: "What is a benefit of maintaining a record of replaced parts?",
+                options: ["Reduces workshop efficiency", "Improves traceability for defective parts", "Increases maintenance costs", "Limits inventory control"],
+                answer: 1,
+                explanation: "Tracking replaced parts allows identification of defective components, improving quality control."
+            },
+            {
+                q: "Which method ensures accurate recording of replaced parts?",
+                options: ["Manual estimation", "Barcode scanning and logging", "Verbal communication", "Random selection"],
+                answer: 1,
+                explanation: "Barcode scanning and logging provide precise and efficient records of replaced parts."
+            },
+            {
+                q: "कुन कागजातले मर्मतमा प्रयोग गरिएका प्रतिस्थापित पार्ट्सको रेकर्ड राख्छ? (Which document records replaced parts used in repairs?)",
+                options: ["लगबुक (Logbook)", "जॉब कार्ड (Job card)", "सेवा म्यानुअल (Service manual)", "वारेन्टी कार्ड (Warranty card)"],
+                answer: 1,
+                explanation: "जॉब कार्डले मर्मतमा प्रयोग गरिएका पार्ट्स र तिनको विवरण राख्छ। (The job card records parts used and their details during repairs.)"
+            },
+
+            // 7.4 Importance of safety
+            {
+                q: "Why is safety important in a workshop?",
+                options: ["To increase production speed", "To prevent accidents and injuries", "To reduce material costs", "To enhance tool durability"],
+                answer: 1,
+                explanation: "Safety practices prevent accidents, protecting workers and reducing downtime."
+            },
+            {
+                q: "What is a key benefit of maintaining safety standards?",
+                options: ["Higher fuel consumption", "Reduced workplace injuries", "Increased machine wear", "Lower equipment efficiency"],
+                answer: 1,
+                explanation: "Safety standards minimize injuries, ensuring a safer work environment."
+            },
+            {
+                q: "How does safety training impact a workshop?",
+                options: ["Increases operational costs", "Improves worker awareness and efficiency", "Reduces tool availability", "Delays maintenance schedules"],
+                answer: 1,
+                explanation: "Training enhances awareness, reducing accidents and improving productivity."
+            },
+            {
+                q: "किन कार्यस्थलमा सुरक्षा महत्त्वपूर्ण छ? (Why is safety important in the workplace?)",
+                options: ["उत्पादन बढाउन (To increase production)", "दुर्घटना रोक्न (To prevent accidents)", "उपकरणको मूल्य बढाउन (To increase equipment cost)", "कामको गति कम गर्न (To reduce work speed)"],
+                answer: 1,
+                explanation: "सुरक्षाले दुर्घटना र चोटपटक रोक्छ। (Safety prevents accidents and injuries in the workplace.)"
+            },
+            {
+                q: "What is the financial benefit of safety practices?",
+                options: ["Higher repair costs", "Reduced insurance premiums", "Increased tool replacement", "Lower worker salaries"],
+                answer: 1,
+                explanation: "Safe workplaces lower accident-related costs, reducing insurance premiums."
+            },
+            {
+                q: "Why should safety rules be followed during machine operation?",
+                options: ["To increase machine speed", "To protect operators from hazards", "To reduce fuel efficiency", "To simplify maintenance"],
+                answer: 1,
+                explanation: "Safety rules protect operators from risks like moving parts or electrical hazards."
+            },
+            {
+                q: "What is a consequence of ignoring safety protocols?",
+                options: ["Improved productivity", "Increased risk of accidents", "Lower operational costs", "Enhanced equipment lifespan"],
+                answer: 1,
+                explanation: "Ignoring safety increases the likelihood of accidents and injuries."
+            },
+            {
+                q: "How does safety contribute to workplace morale?",
+                options: ["By increasing workload", "By ensuring worker well-being", "By reducing task variety", "By limiting tool access"],
+                answer: 1,
+                explanation: "A safe environment boosts worker confidence and morale."
+            },
+            {
+                q: "What role does safety play in regulatory compliance?",
+                options: ["Increases fines", "Ensures adherence to laws", "Reduces production", "Limits worker training"],
+                answer: 1,
+                explanation: "Safety practices ensure compliance with occupational health regulations."
+            },
+            {
+                q: "Why is regular safety auditing necessary?",
+                options: ["To increase costs", "To identify and mitigate hazards", "To reduce worker efficiency", "To limit equipment use"],
+                answer: 1,
+                explanation: "Audits identify potential risks, ensuring a safer workplace."
+            },
+            {
+                q: "सुरक्षा नियमहरू पालना नगर्दा के हुन्छ? (What happens if safety rules are not followed?)",
+                options: ["काम छिटो हुन्छ (Work speeds up)", "दुर्घटनाको जोखिम बढ्छ (Accident risk increases)", "उपकरणको आयु बढ्छ (Equipment lifespan increases)", "खर्च कम हुन्छ (Costs decrease)"],
+                answer: 1,
+                explanation: "सुरक्षा नियम पालना नगर्दा दुर्घटना र चोटपटकको जोखिम बढ्छ। (Ignoring safety rules increases the risk of accidents and injuries.)"
+            },
+            {
+                q: "What is the primary goal of safety in a workshop?",
+                options: ["To maximize profits", "To protect human life and health", "To reduce machine maintenance", "To increase tool wear"],
+                answer: 1,
+                explanation: "Safety prioritizes protecting workers’ lives and health."
+            },
+            {
+                q: "How does safety impact equipment longevity?",
+                options: ["Reduces equipment life", "Prevents misuse-related damage", "Increases repair frequency", "Limits machine operation"],
+                answer: 1,
+                explanation: "Proper safety practices prevent equipment damage from misuse."
+            },
+
+            // 7.5 Types of safety
+            {
+                q: "Which type of safety focuses on protecting workers from physical harm?",
+                options: ["Fire safety", "Personal safety", "Machine safety", "Electrical safety"],
+                answer: 1,
+                explanation: "Personal safety involves measures like PPE to protect workers from physical harm."
+            },
+            {
+                q: "What is an example of machine safety?",
+                options: ["Wearing gloves", "Installing machine guards", "Using fire extinguishers", "Checking electrical wiring"],
+                answer: 1,
+                explanation: "Machine guards prevent contact with hazardous moving parts."
+            },
+            {
+                q: "Which safety type addresses risks from live electrical circuits?",
+                options: ["Personal safety", "Electrical safety", "Fire safety", "Machine safety"],
+                answer: 1,
+                explanation: "Electrical safety involves measures like insulation and grounding to prevent shocks."
+            },
+            {
+                q: "What is fire safety concerned with?",
+                options: ["Preventing equipment wear", "Preventing and controlling fires", "Ensuring machine alignment", "Reducing electrical faults"],
+                answer: 1,
+                explanation: "Fire safety includes fire prevention, detection, and extinguishing measures."
+            },
+            {
+                q: "कुन प्रकारको सुरक्षाले आगलागीबाट जोगाउँछ? (Which type of safety protects against fires?)",
+                options: ["विद्युतीय सुरक्षा (Electrical safety)", "आगो सुरक्षा (Fire safety)", "मेसिन सुरक्षा (Machine safety)", "व्यक्तिगत सुरक्षा (Personal safety)"],
+                answer: 1,
+                explanation: "आगो सुरक्षाले आगलागी रोकथाम र नियन्त्रण गर्छ। (Fire safety prevents and controls fires.)"
+            },
+            {
+                q: "What does personal safety include?",
+                options: ["Machine maintenance", "Wearing PPE like helmets", "Fire alarm installation", "Electrical grounding"],
+                answer: 1,
+                explanation: "Personal safety involves using PPE to protect workers from hazards."
+            },
+            {
+                q: "Which is an example of electrical safety practice?",
+                options: ["Using a fire extinguisher", "Disconnecting power before repairs", "Wearing safety boots", "Installing machine guards"],
+                answer: 1,
+                explanation: "Disconnecting power prevents electrical shocks during maintenance."
+            },
+            {
+                q: "What is a key aspect of machine safety?",
+                options: ["Regular tool calibration", "Preventing operator contact with moving parts", "Using safety goggles", "Fire drills"],
+                answer: 1,
+                explanation: "Machine safety focuses on guarding moving parts to protect operators."
+            },
+            {
+                q: "Which safety type involves practicing evacuation procedures?",
+                options: ["Electrical safety", "Fire safety", "Machine safety", "Personal safety"],
+                answer: 1,
+                explanation: "Fire safety includes evacuation drills to prepare for emergencies."
+            },
+            {
+                q: "What does environmental safety aim to protect?",
+                options: ["Equipment only", "Workers and surroundings", "Machines only", "Tools only"],
+                answer: 1,
+                explanation: "Environmental safety minimizes harm to workers and the environment."
+            },
+            {
+                q: "Which safety type uses lockout/tagout procedures?",
+                options: ["Fire safety", "Electrical safety", "Personal safety", "Machine safety"],
+                answer: 1,
+                explanation: "Lockout/tagout is an electrical and machine safety practice to prevent accidental startup."
+            },
+            {
+                q: "What is an example of personal safety in a workshop?",
+                options: ["Installing fire alarms", "Wearing safety gloves", "Grounding machines", "Using machine guards"],
+                answer: 1,
+                explanation: "Safety gloves protect hands, an example of personal safety."
+            },
+            {
+                q: "कुन सुरक्षा प्रकारले मेसिनको खतरनाक भागबाट जोगाउँछ? (Which safety type protects from hazardous machine parts?)",
+                options: ["आगो सुरक्षा (Fire safety)", "मेसिन सुरक्षा (Machine safety)", "विद्युतीय सुरक्षा (Electrical safety)", "व्यक्तिगत सुरक्षा (Personal safety)"],
+                answer: 1,
+                explanation: "मेसिन सुरक्षाले मेसिनका खतरनाक भागमा गार्ड राख्छ। (Machine safety uses guards to protect from hazardous parts.)"
+            },
+
+            // 7.6 Safety tools and devices in workshops
+            {
+                q: "Which is NOT a safety tool for a mechanic?",
+                options: ["Shirt and pants", "Safety boots", "Goggles", "Gloves"],
                 answer: 0,
-                explanation: "Record keeping tracks maintenance costs, schedules, and equipment performance, not just attendance."
+                explanation: "Shirt and pants are not safety tools; safety boots, goggles, and gloves protect against workplace hazards."
+            },
+            {
+                q: "Personal safety device मा पर्ने कुन हो? (Which is a personal safety device?)",
+                options: ["Safety helmet", "Fan belt cover", "Wrench", "Screwdriver"],
+                answer: 0,
+                explanation: "सुरक्षा हेलमेट व्यक्तिगत सुरक्षा उपकरण हो; फ्यान बेल्ट कभर गाडीको कम्पोनेन्ट हो। (A safety helmet is a personal safety device; a fan belt cover is a vehicle component.)"
             },
             {
                 q: "At which interval should safety footwear be inspected?",
@@ -504,29 +725,13 @@
                 explanation: "पन्जा व्यक्तिगत सुरक्षा उपकरण हो; हथौडा, रेन्च, र पेचकस उपकरण हुन्। (Gloves are personal protective equipment; hammers, wrenches, and screwdrivers are tools.)"
             },
             {
-                q: "Machine को मर्मत, सञ्चालन, समायोजन आदि जान्न दिइने सूचना कुन म्यानुअलमा पाइन्छ? (Which manual provides information on machine maintenance, operation, and adjustment?)",
-                options: ["Workshop Manual", "Parts Manual", "Sales Brochure", "Warranty Card"],
-                answer: 0,
-                explanation: "वर्कशप म्यानुअलले मर्मत र सञ्चालनको विस्तृत जानकारी दिन्छ। (A workshop manual provides detailed maintenance and operation instructions.)"
-            },
-            {
-                q: "मेसिनको सञ्चालन र मर्मत गर्न कुन म्यानुअल चाहिन्छ? (Which manual is needed for machine operation and maintenance?)",
-                options: ["Workshop Manual", "Instruction Chart", "Parts Catalog", "User Guide"],
-                answer: 0,
-                explanation: "वर्कशप म्यानुअल मेसिनको सञ्चालन र मर्मतको लागि आवश्यक छ। (A workshop manual is essential for machine operation and maintenance.)"
-            },
-            {
-                q: "मेसिनको operation manual ले कुन प्रकारको जानकारी दिन्छ? (What type of information does an operation manual provide?)",
-                options: ["प्रयोग र मर्मतको तरिका (Usage and maintenance methods)", "केवल प्रयोगको तरिका (Only usage methods)", "केवल पार्ट्सको जानकारी (Only parts information)", "केवल लागतको जानकारी (Only cost information)"],
-                answer: 0,
-                explanation: "अपरेसन म्यानुअलले प्रयोग र मर्मतको प्रक्रिया समेट्छ। (An operation manual covers both usage and maintenance procedures.)"
-            },
-            {
                 q: "In a workshop, where should dangerous tools be stored?",
                 options: ["Out of reach and labeled", "Near the entrance", "On the workbench", "In an open box"],
                 answer: 0,
                 explanation: "Dangerous tools should be stored out of reach and clearly labeled for safety."
             },
+
+            // 7.7 Safety tools and devices in vehicles
             {
                 q: "गाडीको हाइब्रिड ब्रेक फ्लुइड कहिले परिवर्तन गर्नुपर्छ? (When should hybrid vehicle brake fluid be changed?)",
                 options: ["निर्माताको सिफारिस अनुसार (Per manufacturer’s recommendation)", "गाडी बिग्रँदा (When the vehicle breaks down)", "हरेक हप्ता (Every week)", "हरेक 6 महिना (Every 6 months)"],
@@ -562,7 +767,7 @@
 
         // Clear progress to start fresh
         function clearProgress() {
-            localStorage.removeItem("quizProgressRecordKeeping");
+            localStorage.removeItem("quizProgressSafety");
             currentPage = 0;
             score = 0;
             skipped = [];
@@ -572,7 +777,7 @@
 
         // Save progress to localStorage
         function saveProgress() {
-            localStorage.setItem("quizProgressRecordKeeping", JSON.stringify({
+            localStorage.setItem("quizProgressSafety", JSON.stringify({
                 currentPage,
                 score,
                 skipped,
@@ -816,7 +1021,7 @@
                 `;
             }).join('');
 
-            localStorage.removeItem('quizProgressRecordKeeping');
+            localStorage.removeItem('quizProgressSafety');
         }
 
         // Restart quiz
