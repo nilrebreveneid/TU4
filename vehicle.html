@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logsewa Vehicle Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #e0e7ff, #c3dafe); margin: 0; padding: 2rem; color: #333; min-height: 100vh; }
+        .quiz-container { max-width: 900px; margin: auto; background: #fff; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; margin-bottom: 1.5rem; color: #1e3a8a; font-size: 2rem; font-weight: 700; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px; }
+        .timer { font-size: 1.2rem; font-weight: 600; color: #d81b60; }
+        .progress-bar { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
+        .progress { height: 100%; background: #3b82f6; transition: width 0.3s ease; }
+        .question { margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; }
+        .question p { font-size: 1.2rem; font-weight: 600; color: #1e3a8a; margin-bottom: 1rem; }
+        .options button { display: block; width: 100%; padding: 1rem; margin: 0.5rem 0; background: #ffffff; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-align: left; color: #374151; }
+        .options button:hover:not(:disabled) { background: #f3f4f6; border-color: #3b82f6; transform: translateX(4px); }
+        .options button.correct { background: #bbf7d0; border-color: #22c55e; color: #166534; }
+        .options button.wrong { background: #fecaca; border-color: #ef4444; color: #991b1b; }
+        .options button:disabled { cursor: not-allowed; opacity: 0.7; }
+        .explanation { display: none; margin-top: 1rem; padding: 1rem; background: #eff6ff; border-radius: 8px; color: #1e3a8a; font-size: 0.95rem; }
+        .skip-button { background: #fff3cd; margin-top: 1rem; padding: 0.75rem; width: 100%; border: 1px solid #ffca28; border-radius: 8px; cursor: pointer; transition: background 0.3s ease; }
+        .skip-button:hover { background: #ffecb3; }
+        .next-button { background: #3b82f6; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; margin-top: 1rem; display: block; width: 100%; text-align: center; transition: background 0.3s ease; }
+        .next-button:hover:not(:disabled) { background: #2563eb; }
+        .next-button:disabled { background: #ccc; cursor: not-allowed; }
+        .score-container { text-align: center; margin-top: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; }
+        .score { font-size: 1.5rem; font-weight: 700; color: #1e3a8a; }
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.95rem; }
+        .results-table th, .results-table td { border: 1px solid #e5e7eb; padding: 0.75rem; text-align: left; }
+        .results-table th { background: #f8fafc; color: #1e3a8a; font-weight: 600; }
+        .results-table .correct { color: #166534; font-weight: bold; }
+        .results-table .wrong { color: #991b1b; font-weight: bold; }
+        .results-table .skipped, .results-table .not-attempted { color: #d97706; font-weight: bold; }
+        .hidden { display: none; }
+        .restart-button { background: #22c55e; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; margin: 1rem auto; display: block; width: 100%; text-align: center; transition: background 0.3s ease; }
+        .restart-button:hover { background: #16a34a; }
+        @media (max-width: 600px) { body { padding: 1rem; } .quiz-container { padding: 1rem; } h1 { font-size: 1.8rem; } .question p { font-size: 1rem; } .options button, .skip-button, .next-button, .restart-button { font-size: 0.9rem; padding: 0.8rem; } .results-table th, .results-table td { padding: 0.5rem; font-size: 0.85rem; } }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Logsewa Vehicle Quiz</h1>
+        <div class="quiz-header">
+            <div class="timer" id="timer">Time: 00:00</div>
+            <div class="score" id="current-score">Score: 0/40</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div id="quiz"></div>
+        <div class="score-container">
+            <div class="score" id="score"></div>
+            <div id="results" class="hidden">
+                <h2>Quiz Results</h2>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Your Answer</th>
+                            <th>Correct Answer</th>
+                            <th>Status</th>
+                            <th>Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body"></tbody>
+                </table>
+                <button class="restart-button" onclick="restartQuiz()">Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="correct-sound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+    <audio id="wrong-sound" src="https://www.soundjay.com/buttons/beep-02.mp3"></audio>
+
+    <script>
+        const questions = [
+            // 3.1 Hatchback
+            {
+                q: "What is a defining feature of a hatchback car?",
+                options: ["Separate trunk", "Upward-opening rear door", "Four-wheel drive", "High ground clearance"],
+                answer: 1,
+                explanation: "A hatchback is characterized by an upward-opening rear door that integrates the cargo area with the passenger compartment."
+            },
+            {
+                q: "Which of these is an example of a hatchback?",
+                options: ["Toyota Corolla", "Maruti Suzuki Swift", "Toyota Fortuner", "Ford Ranger"],
+                answer: 1,
+                explanation: "Maruti Suzuki Swift is a popular hatchback known for its compact size and versatility."
+            },
+            {
+                q: "What is a common disadvantage of hatchbacks?",
+                options: ["Poor fuel efficiency", "Limited rear legroom", "High maintenance cost", "Low safety rating"],
+                answer: 1,
+                explanation: "Hatchbacks often have limited rear legroom due to their compact design."
+            },
+            {
+                q: "Hatchbacks are best suited for:",
+                options: ["Off-road adventures", "Urban commuting", "Heavy towing", "Long-distance travel"],
+                answer: 1,
+                explanation: "Their compact size makes hatchbacks ideal for urban commuting and parking."
+            },
+            // 3.2 Saloons/Sedans
+            {
+                q: "What is the typical configuration of a saloon/sedan?",
+                options: ["Two-box design", "Three-box design", "Single-box design", "Four-box design"],
+                answer: 1,
+                explanation: "A sedan has a three-box design with separate engine, passenger, and trunk compartments."
+            },
+            {
+                q: "Which vehicle is an example of a saloon/sedan?",
+                options: ["Honda Civic", "Mahindra Thar", "Toyota HiAce", "Isuzu D-Max"],
+                answer: 0,
+                explanation: "Honda Civic is a well-known sedan designed for passenger comfort."
+            },
+            {
+                q: "What advantage do saloons offer over hatchbacks?",
+                options: ["Better cargo flexibility", "More passenger comfort", "Higher ground clearance", "Lower fuel consumption"],
+                answer: 1,
+                explanation: "Saloons provide more legroom and comfort for passengers, especially on long trips."
+            },
+            {
+                q: "Why might a sedan be less suitable for city parking?",
+                options: ["Larger size", "Higher cost", "Poor engine performance", "Lack of safety features"],
+                answer: 0,
+                explanation: "The larger size of sedans makes them harder to park in tight urban spaces."
+            },
+            // 3.3 Sports Utility Vehicles (SUV)
+            {
+                q: "What is a key feature of an SUV?",
+                options: ["Low ground clearance", "Four-wheel drive option", "Small cargo space", "Two-door design"],
+                answer: 1,
+                explanation: "SUVs often feature four-wheel drive, enhancing their off-road capability."
+            },
+            {
+                q: "Which of these is an example of an SUV?",
+                options: ["Toyota Yaris", "Toyota Fortuner", "Maruti Suzuki Dzire", "Nissan Leaf"],
+                answer: 1,
+                explanation: "Toyota Fortuner is a popular SUV known for its rugged design and seating capacity."
+            },
+            {
+                q: "What is a disadvantage of SUVs?",
+                options: ["Low towing capacity", "High fuel consumption", "Poor passenger space", "Limited off-road use"],
+                answer: 1,
+                explanation: "SUVs tend to consume more fuel due to their larger engines and weight."
+            },
+            {
+                q: "SUVs are ideal for:",
+                options: ["City parking", "Off-road conditions", "Small family use only", "Low-speed travel"],
+                answer: 1,
+                explanation: "Their high ground clearance and 4WD make SUVs suitable for off-road conditions."
+            },
+            // 3.4 Pickup Trucks
+            {
+                q: "What is the primary purpose of a pickup truck's cargo bed?",
+                options: ["Passenger seating", "Goods transportation", "Engine housing", "Fuel storage"],
+                answer: 1,
+                explanation: "The open cargo bed is designed for transporting goods and materials."
+            },
+            {
+                q: "Which vehicle is an example of a pickup truck?",
+                options: ["Ford Ranger", "Honda Civic", "Toyota HiAce", "Tesla Model 3"],
+                answer: 0,
+                explanation: "Ford Ranger is a well-known pickup truck with a robust cargo bed."
+            },
+            {
+                q: "What is a common disadvantage of pickup trucks?",
+                options: ["High towing capacity", "Poor passenger comfort", "Low payload", "Excellent fuel economy"],
+                answer: 1,
+                explanation: "Pickup trucks are less comfortable for passengers due to their truck-based design."
+            },
+            {
+                q: "Pickup trucks are commonly used in:",
+                options: ["Urban commuting", "Construction and agriculture", "Luxury travel", "Emergency medical services"],
+                answer: 1,
+                explanation: "Their payload and towing capacity make them ideal for construction and agriculture."
+            },
+            // 3.5 Vans
+            {
+                q: "What is a distinctive feature of a van?",
+                options: ["Low roof", "Sliding side doors", "Separate trunk", "Two-wheel drive only"],
+                answer: 1,
+                explanation: "Vans typically have sliding side doors for easy access to the large interior."
+            },
+            {
+                q: "Which vehicle is an example of a van?",
+                options: ["Toyota HiAce", "Maruti Suzuki Swift", "Ford Everest", "Isuzu D-Max"],
+                answer: 0,
+                explanation: "Toyota HiAce is a versatile van used for passenger and cargo transport."
+            },
+            {
+                q: "What is an advantage of vans?",
+                options: ["Compact size", "High passenger capacity", "Low operating cost", "Excellent off-road ability"],
+                answer: 1,
+                explanation: "Vans can accommodate 6-15 passengers, making them ideal for group travel."
+            },
+            {
+                q: "Vans are less suitable for:",
+                options: ["Commercial delivery", "Tight parking spaces", "Long-distance travel", "Cargo transport"],
+                answer: 1,
+                explanation: "Their large size makes vans difficult to maneuver in tight parking spaces."
+            },
+            // 3.6 Ambulances
+            {
+                q: "What is the primary function of an ambulance?",
+                options: ["Goods transport", "Passenger comfort", "Emergency medical transport", "Off-road exploration"],
+                answer: 2,
+                explanation: "Ambulances are designed to transport sick or injured individuals with medical care."
+            },
+            {
+                q: "Which equipment is commonly found in an ambulance?",
+                options: ["Winch", "Defibrillator", "Towing hook", "Spare tire"],
+                answer: 1,
+                explanation: "A defibrillator is a critical medical device used in ambulances for emergencies."
+            },
+            {
+                q: "What is a disadvantage of ambulances?",
+                options: ["High maintenance", "Low speed", "Poor road priority", "Limited seating"],
+                answer: 0,
+                explanation: "The specialized equipment increases maintenance costs for ambulances."
+            },
+            {
+                q: "Ambulances are typically based on which vehicle type?",
+                options: ["Sedan", "Van or SUV", "Pickup truck", "Hatchback"],
+                answer: 1,
+                explanation: "Ambulances are often modified from vans or SUVs for space and stability."
+            },
+            // 3.7 Bulletproof Vehicles
+            {
+                q: "What is the main purpose of a bulletproof vehicle?",
+                options: ["Off-road travel", "Protection from ballistic threats", "Fuel efficiency", "Passenger luxury"],
+                answer: 1,
+                explanation: "Bulletproof vehicles are armored to protect occupants from gunfire and explosives."
+            },
+            {
+                q: "Which material is used to reinforce bulletproof vehicles?",
+                options: ["Plastic", "Steel plating", "Wood", "Glass fiber"],
+                answer: 1,
+                explanation: "Steel plating provides the necessary strength to resist ballistic impacts."
+            },
+            {
+                q: "What is a disadvantage of bulletproof vehicles?",
+                options: ["High cost", "Low security", "Poor speed", "Small size"],
+                answer: 0,
+                explanation: "The advanced armor and materials make bulletproof vehicles extremely expensive."
+            },
+            {
+                q: "Bulletproof vehicles are commonly used by:",
+                options: ["Daily commuters", "Security personnel", "Delivery services", "Tourists"],
+                answer: 1,
+                explanation: "They are designed for high-risk individuals like security or government officials."
+            },
+            // 3.8 Electric Vehicles (EVs)
+            {
+                q: "What powers an electric vehicle (EV)?",
+                options: ["Gasoline engine", "Electric motor and battery", "Diesel engine", "Hybrid system only"],
+                answer: 1,
+                explanation: "EVs are powered by electric motors using energy from a battery pack."
+            },
+            {
+                q: "Which is an example of an electric vehicle?",
+                options: ["Toyota Fortuner", "Tesla Model 3", "Ford Ranger", "Honda Civic"],
+                answer: 1,
+                explanation: "Tesla Model 3 is a popular fully electric vehicle."
+            },
+            {
+                q: "What is an advantage of EVs?",
+                options: ["Long range", "Zero tailpipe emissions", "High fuel consumption", "Loud operation"],
+                answer: 1,
+                explanation: "EVs produce zero tailpipe emissions, making them environmentally friendly."
+            },
+            {
+                q: "What is a common limitation of EVs?",
+                options: ["High speed", "Limited range", "Excessive noise", "Large cargo space"],
+                answer: 1,
+                explanation: "EVs typically have a limited range (200-400 km) per charge."
+            }
+        ];
+
+        let currentPage = 0;
+        let score = 0;
+        let skipped = [];
+        let userAnswers = Array(questions.length).fill(null);
+        let timerSeconds = 0;
+        let timerInterval;
+        const QUESTIONS_PER_PAGE = 10; // Adjusted for 40 questions, showing 10 per page
+        const ANSWER_DELAY = 1000;
+
+        const quizEl = document.getElementById("quiz");
+        const scoreEl = document.getElementById("score");
+        const resultsEl = document.getElementById("results");
+        const resultsBody = document.getElementById("results-body");
+        const progressEl = document.getElementById("progress");
+        const timerEl = document.getElementById("timer");
+        const currentScoreEl = document.getElementById("current-score");
+        const correctSound = document.getElementById("correct-sound");
+        const wrongSound = document.getElementById("wrong-sound");
+
+        function clearProgress() {
+            localStorage.removeItem("quizProgressVehicles");
+            currentPage = 0;
+            score = 0;
+            skipped = [];
+            userAnswers = Array(questions.length).fill(null);
+            timerSeconds = 0;
+        }
+
+        function saveProgress() {
+            localStorage.setItem("quizProgressVehicles", JSON.stringify({
+                currentPage,
+                score,
+                skipped,
+                answers: userAnswers,
+                time: timerSeconds
+            }));
+        }
+
+        function updateCurrentScore() {
+            currentScoreEl.textContent = `Score: ${score}/${questions.length}`;
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                const minutes = Math.floor(timerSeconds / 60);
+                const seconds = timerSeconds % 60;
+                timerEl.textContent = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                saveProgress();
+            }, 1000);
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(answer => answer !== null).length;
+            const percentage = (answeredCount / questions.length) * 100;
+            progressEl.style.width = `${percentage}%`;
+        }
+
+        function showQuestions(page) {
+            quizEl.innerHTML = '';
+            const startIndex = page * QUESTIONS_PER_PAGE;
+            const endIndex = Math.min(startIndex + QUESTIONS_PER_PAGE, questions.length);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const q = questions[i];
+                const shuffledOptions = shuffle([...q.options].map((opt, j) => ({ text: opt, index: j })));
+                const optionsHtml = shuffledOptions
+                    .map(opt => `<button onclick="checkAnswer(this, ${i}, ${opt.index}, '${opt.text.replace(/'/g, "\\'")}')">${opt.text}</button>`)
+                    .join('');
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.dataset.index = i;
+                questionDiv.innerHTML = `
+                    <p>Q${i + 1}. ${q.q}</p>
+                    <div class="options">${optionsHtml}</div>
+                    <button class="skip-button" onclick="skipQuestion(${i})">Skip</button>
+                    <div class="explanation">${q.explanation}</div>
+                `;
+                quizEl.appendChild(questionDiv);
+            }
+
+            if (endIndex < questions.length || skipped.length > 0) {
+                const nextButton = document.createElement('button');
+                nextButton.classList.add('next-button');
+                nextButton.textContent = endIndex < questions.length ? 'Next' : 'Review Skipped Questions';
+                nextButton.onclick = nextPage;
+                nextButton.disabled = !areAllQuestionsAnsweredOnPage(startIndex, endIndex);
+                quizEl.appendChild(nextButton);
+            } else {
+                const submitButton = document.createElement('button');
+                submitButton.classList.add('next-button');
+                submitButton.textContent = 'Submit Quiz';
+                submitButton.onclick = endQuiz;
+                submitButton.disabled = !areAllQuestionsAnsweredOnPage(startIndex, endIndex);
+                quizEl.appendChild(submitButton);
+            }
+
+            updateProgress();
+            saveProgress();
+            restoreAnswers(startIndex, endIndex);
+        }
+
+        function restoreAnswers(startIndex, endIndex) {
+            for (let i = startIndex; i < endIndex; i++) {
+                if (userAnswers[i] !== null && userAnswers[i] !== 'Skipped') {
+                    const questionDiv = document.querySelector(`.question[data-index="${i}"]`);
+                    const buttons = questionDiv.querySelectorAll('.options button');
+                    const q = questions[i];
+                    buttons.forEach(btn => {
+                        btn.disabled = true;
+                        if (btn.textContent === q.options[q.answer]) {
+                            btn.classList.add('correct');
+                        }
+                        if (btn.textContent === userAnswers[i] && userAnswers[i] !== q.options[q.answer]) {
+                            btn.classList.add('wrong');
+                        }
+                    });
+                    questionDiv.querySelector('.explanation').style.display = 'block';
+                    questionDiv.querySelector('.skip-button').disabled = true;
+                } else if (userAnswers[i] === 'Skipped') {
+                    const questionDiv = document.querySelector(`.question[data-index="${i}"]`);
+                    questionDiv.querySelectorAll('.options button').forEach(btn => btn.disabled = true);
+                    questionDiv.querySelector('.skip-button').disabled = true;
+                    questionDiv.querySelector('.explanation').style.display = 'block';
+                }
+            }
+        }
+
+        function areAllQuestionsAnsweredOnPage(startIndex, endIndex) {
+            for (let i = startIndex; i < endIndex; i++) {
+                if (userAnswers[i] === null) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function checkAnswer(button, questionIndex, selected, selectedText) {
+            const q = questions[questionIndex];
+            const correct = q.answer;
+            const buttons = button.parentElement.querySelectorAll("button");
+            const questionDiv = button.closest('.question');
+            const explanationDiv = questionDiv.querySelector('.explanation');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (q.options.indexOf(btn.textContent) === correct) {
+                    btn.classList.add('correct');
+                }
+                if (btn === button && selected !== correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            questionDiv.querySelector('.skip-button').disabled = true;
+            explanationDiv.style.display = 'block';
+
+            userAnswers[questionIndex] = selectedText;
+            if (selected === correct) {
+                score++;
+                correctSound.play().catch(() => console.log("Audio playback failed"));
+            } else {
+                wrongSound.play().catch(() => console.log("Audio playback failed"));
+            }
+
+            updateCurrentScore();
+            saveProgress();
+            const nextButton = quizEl.querySelector('.next-button');
+            if (nextButton) {
+                nextButton.disabled = !areAllQuestionsAnsweredOnPage(
+                    currentPage * QUESTIONS_PER_PAGE,
+                    Math.min((currentPage + 1) * QUESTIONS_PER_PAGE, questions.length)
+                );
+            }
+
+            setTimeout(() => {
+                if (areAllQuestionsAnsweredOnPage(
+                    currentPage * QUESTIONS_PER_PAGE,
+                    Math.min((currentPage + 1) * QUESTIONS_PER_PAGE, questions.length)
+                )) {
+                    nextPage();
+                }
+            }, ANSWER_DELAY);
+        }
+
+        function skipQuestion(questionIndex) {
+            if (!skipped.includes(questions[questionIndex])) {
+                skipped.push(questions[questionIndex]);
+                userAnswers[questionIndex] = 'Skipped';
+                const questionDiv = document.querySelector(`.question[data-index="${questionIndex}"]`);
+                if (questionDiv) {
+                    questionDiv.querySelectorAll('.options button').forEach(btn => btn.disabled = true);
+                    questionDiv.querySelector('.skip-button').disabled = true;
+                    questionDiv.querySelector('.explanation').style.display = 'block';
+                }
+                saveProgress();
+                const nextButton = quizEl.querySelector('.next-button');
+                if (nextButton) {
+                    nextButton.disabled = !areAllQuestionsAnsweredOnPage(
+                        currentPage * QUESTIONS_PER_PAGE,
+                        Math.min((currentPage + 1) * QUESTIONS_PER_PAGE, questions.length)
+                    );
+                }
+            }
+        }
+
+        function nextPage() {
+            if (skipped.length > 0 && currentPage * QUESTIONS_PER_PAGE >= questions.length) {
+                showSkippedQuestions();
+            } else {
+                currentPage++;
+                if (currentPage * QUESTIONS_PER_PAGE < questions.length) {
+                    showQuestions(currentPage);
+                } else if (skipped.length === 0) {
+                    endQuiz();
+                } else {
+                    showSkippedQuestions();
+                }
+            }
+        }
+
+        function showSkippedQuestions() {
+            questions.splice(0, questions.length, ...skipped);
+            skipped = [];
+            currentPage = 0;
+            showQuestions(currentPage);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizEl.innerHTML = '';
+            scoreEl.textContent = `Final Score: ${score} out of ${questions.length} (${((score / questions.length) * 100).toFixed(2)}%)`;
+            resultsEl.classList.remove('hidden');
+
+            resultsBody.innerHTML = questions.map((q, i) => {
+                const userAnswer = userAnswers[i] === null ? 'Not attempted' :
+                                  userAnswers[i] === 'Skipped' ? 'Skipped' :
+                                  userAnswers[i];
+                const correctAnswer = q.options[q.answer];
+                const status = userAnswers[i] === q.options[q.answer] ? 'Correct' :
+                              userAnswers[i] === 'Skipped' ? 'Skipped' :
+                              userAnswers[i] === null ? 'Not-attempted' : 'Wrong';
+                return `
+                    <tr>
+                        <td>${i + 1}. ${q.q}</td>
+                        <td>${userAnswer}</td>
+                        <td>${correctAnswer}</td>
+                        <td class="${status.toLowerCase().replace(' ', '-')}">${status}</td>
+                        <td class="explanation">${q.explanation}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            localStorage.removeItem('quizProgressVehicles');
+        }
+
+        function restartQuiz() {
+            clearProgress();
+            resultsEl.classList.add('hidden');
+            scoreEl.textContent = '';
+            startTimer();
+            showQuestions(currentPage);
+            updateCurrentScore();
+        }
+
+        function initialize() {
+            clearProgress();
+            startTimer();
+            showQuestions(currentPage);
+            updateCurrentScore();
+        }
+
+        initialize();
+    </script>
+</body>
+</html>
